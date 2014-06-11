@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TrainApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+     <string name="train_prompt">Choose a training</string>
+     <string-array name="train_arrays">
+        <item>External measurement</item>
+        <item>SOD-based</item>
+        <item>SemiOnline-based</item>
+    </string-array>
+
+</resources>

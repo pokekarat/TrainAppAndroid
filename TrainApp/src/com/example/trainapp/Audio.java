@@ -1,4 +1,4 @@
-package com.example.semionline;
+package com.example.trainapp;
 
 import java.io.IOException;
 

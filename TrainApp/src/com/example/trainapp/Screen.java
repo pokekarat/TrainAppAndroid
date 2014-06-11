@@ -1,4 +1,4 @@
-package com.example.semionline;
+package com.example.trainapp;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.io.RandomAccessFile;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-public class AMOLED {
+public class Screen {
 	
 	public static LinearLayout li;
 
