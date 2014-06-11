@@ -32,13 +32,11 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 	
     @Override
 	protected Integer doInBackground(Integer... arg0)
-	{
-    	
-    	
+	{	
     	while(true)
     	{
     		
-    		if(Config.sample == 0)
+    		if(Config.sample == 30)
     			ht.execute(Config.sample);
     		
     		this.publishProgress(Config.sample);
@@ -129,6 +127,10 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 	    	else if (ht.hwName.contains("bluetooth"))
 	    	{
 	    		view.bluetoothTxt.setText("testing");
+	    	}
+	    	else if(ht.hwName.contains("")){
+	    		
+	    		view.statusTxt.setText("No hw being trained");
 	    	}
 	    	
 	}

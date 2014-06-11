@@ -211,6 +211,9 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 			else if(hwName.equals("bluetooth")){
 				this.BluetoothTrain();
 			}
+			else {
+				
+			}
 			
 			SystemClock.sleep(1000);
 			 
