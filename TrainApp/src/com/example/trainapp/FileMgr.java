@@ -20,7 +20,7 @@ public class FileMgr {
 		try {
 			
 			File root = Environment.getExternalStorageDirectory();
-			String folder = "/sdcard"; //root.getAbsolutePath()+"/semionline";
+			String folder = "/sdcard/semionline"; //root.getAbsolutePath()+"/semionline";
 			
 			File dir = new File(folder);
 			

@@ -12,11 +12,11 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 	HwTrainForExternal ht;
 	Ui view;
 	
-	public ExternalMeasureTask(String s, Ui v, String hwTarget)
+	public ExternalMeasureTask(String s, Ui v)
 	{
 		setExternal = s;
 		view = v;
-		hwTargetName = hwTarget;
+		hwTargetName = v.hwTarget;
 	}
 	
 	@Override
@@ -63,75 +63,93 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 	protected void onProgressUpdate(Integer... arg1)
 	{    
 		
-		 FileMgr.processResults();
-	           	    	
-		 view.showData();
+		FileMgr.processResults();
+		
+		view.showData();
 	    		
-	    	//[cpu] [screen] [gpu] [audio] [gps] [wi-fi]
-	    	//[util,freq] [bright] [0] [
-	    	
-	    	if(ht.hwName.contains("cpu"))
-	    	{
+    	if(ht.hwName.contains("cpu"))
+    	{
+    		
+    		if(ht.isStartTrain)
+    		{
 	    		
-	    		if(ht.isStartTrain)
-	    		{
-    	    		
-    	    		view.cpuStatusTxt.setText("Start @sample= "+startPoint+"\n["+ht.currentStep+"/"+ht.totalStep+"]["+ht.position+"/"+ht.offset+"]\n[util = "+ ht.currentUtil + ", freq = "+ht.currentFreq+"]" );
-    	    		result += Config.sample+" [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + ",("+ht.currentUtil+","+ht.currentFreq+")] [" + FileMgr.brightData + "]\n";
-    	    	
-	    	    	if(ht.isBreak)
-	    	    	{
-	    	    		view.cpuStatusTxt.setText("Saving CPU training.");
-	    	    		FileMgr.saveSDCard(ht.hwName, result);
-	    	    		result = "";
-	    	    		ht.isBreak = false;
-	    	    		
-	    	    	}
-	    	    	
-	    	    	if(ht.isMainBreak)
-	    	    		this.isTrainStop = true;
-	    		}
-	    		else
-	    		{
-    	    		view.cpuStatusTxt.setText("Not sample yet \n ["+ht.currentStep+"/"+ht.totalStep+"]["+ht.position+"/"+ht.offset+"]\n[util = "+ ht.currentUtil + ", freq = "+ht.currentFreq+"]" );
-    	    		startPoint = Config.sample;
-	    		}	
-	    	}
-	    	else if(ht.hwName.contains("screen"))
-	    	{
-	    		view.screenStatusTxt.setText("["+ht.currentStep+"/"+ht.totalStep+"] [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + "] [" + FileMgr.brightData + ",("+ht.brightData+")] ");
-	    		
-	    		result += Config.sample+" [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + "] [" + FileMgr.brightData + ",("+ht.brightData+")] ";
-    	    	
-	    		if(ht.isStartTrain){
-	    			result += "*\n";
-	    		}else{
-	    			result += "\n";
-	    		}
+	    		view.cpuStatusTxt.setText("Start @sample= "+startPoint+"\n["+ht.currentStep+"/"+ht.totalStep+"]["+ht.position+"/"+ht.offset+"]\n[util = "+ ht.currentUtil + ", freq = "+ht.currentFreq+"]" );
+	    		result += Config.sample+" [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + ",("+ht.currentUtil+","+ht.currentFreq+")] [" + FileMgr.brightData + "]\n";
 	    	
     	    	if(ht.isBreak)
     	    	{
-    	    		view.screenStatusTxt.setText("Finish LCD training.");
+    	    		view.cpuStatusTxt.setText("Saving CPU training.");
     	    		FileMgr.saveSDCard(ht.hwName, result);
-    	    		this.isTrainStop = true;
     	    		result = "";
+    	    		ht.isBreak = false;
+    	    		
     	    	}
     	    	
     	    	if(ht.isMainBreak)
     	    		this.isTrainStop = true;
-	    	}
-	    	else if (ht.hwName.contains("gps"))
+    		}
+    		else
+    		{
+	    		view.cpuStatusTxt.setText("Not sample yet \n ["+ht.currentStep+"/"+ht.totalStep+"]["+ht.position+"/"+ht.offset+"]\n[util = "+ ht.currentUtil + ", freq = "+ht.currentFreq+"]" );
+	    		startPoint = Config.sample;
+    		}	
+    	}
+    	else if(ht.hwName.contains("screen"))
+    	{
+    		view.screenStatusTxt.setText("["+ht.currentStep+"/"+ht.totalStep+"] [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + "] [" + FileMgr.brightData + ",("+ht.brightData+")] ");
+    		
+    		result += Config.sample+" [" + FileMgr.cpuUtilData + "," + FileMgr.cpuFreqData + "] [" + FileMgr.brightData + ",("+ht.brightData+")] ";
+	    	
+    		if(ht.isStartTrain){
+    			result += "*\n";
+    		}else{
+    			result += "\n";
+    		}
+    	
+	    	if(ht.isBreak)
 	    	{
-	    		//view.gpsTxt.setText(gps.gpsStatus + " " +gps.numSat+" "+gps.locateStr);
+	    		view.screenStatusTxt.setText("Finish LCD training.");
+	    		FileMgr.saveSDCard(ht.hwName, result);
+	    		this.isTrainStop = true;
+	    		result = "";
 	    	}
-	    	else if (ht.hwName.contains("bluetooth"))
-	    	{
-	    		view.bluetoothTxt.setText("testing");
-	    	}
-	    	else if(ht.hwName.contains("")){
+	    	
+	    	if(ht.isMainBreak)
+	    		this.isTrainStop = true;
+    	}
+    	else if (ht.hwName.contains("gps"))
+    	{
+    		view.gpsTxt.setText(view.gps.gpsStatus + " " +view.gps.numSat+" "+view.gps.locateStr);
+    	
+    	}
+    	else if (ht.hwName.contains("bluetooth"))
+    	{
+    		view.bluetoothTxt.setText("Waiting for testing...");
+    		
+    		if(ht.isStartTrain){
+    			
+    			String s = "sample="+Config.sample + " step="+ht.currentStep+"/"+ht.totalStep + " cpu="+FileMgr.cpuUtil+" freq="+ FileMgr.cpuFreqData +" bright="+FileMgr.brightData + " voltage="+FileMgr.voltData + " temp="+FileMgr.tempData + " cap="+Battery.getBatteryLevel() + "\n";
+    			result += s;
+    			view.bluetoothTxt.setText(s);
+    			
+    		}
+    		
+    		if(ht.isBreak){
+    			
+    			view.bluetoothTxt.setText("Finish testing...");
+    			FileMgr.saveSDCard(ht.hwName, result);
+	    		result = "";
+	    		ht.isBreak = false;
 	    		
-	    		view.statusTxt.setText("No hw being trained");
-	    	}
+    		}
+    		
+    		if(ht.isMainBreak)
+	    		this.isTrainStop = true;
+    	}
+    	else if(ht.hwName.contains("")){
+    		
+    		view.statusTxt.setText("No hw being trained");
+    	}
 	    	
 	}
 	

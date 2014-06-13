@@ -44,7 +44,6 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 		@Override
     	protected void onPreExecute()
     	{   
-			
     	}
 
 		public void CPUTrain()
@@ -74,7 +73,7 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 	    			currentFreq = freqs[f]/1000;	
 	    			isLoopEnd = false;
 	    			
-	    			hwName = "CPU_"+ currentUtil +"_"+ currentFreq;
+	    			hwName = "cpu_"+ currentUtil +"_"+ currentFreq;
 	    			CPU.setData(governor , ""+freqs[f]);
 	    			
 	    			
@@ -82,8 +81,7 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 		    		SystemClock.sleep(delay*1000);
 		    		Screen.SetBrightness(5);
 		    		
-		    		if(!isStartTrain)
-		    			isStartTrain = true;
+		    		isStartTrain = true;
 		    		
 		    		while(!isLoopEnd)
 	    	    	{
@@ -135,7 +133,7 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 				 for(int b=0; b<=255; b+= 25)
 				 { 
 					 SystemClock.sleep(30000);
-					 hwName = "LCD_"+b;
+					 hwName = "screen_"+b;
 		    		 Screen.SetBrightness(b);
 		    		 brightData = b;
 		    		 
@@ -159,7 +157,7 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 		public void GPSTrain()
 		{
 				//new GPS().startGPS();	
-				hwName = "GPS";
+				hwName = "gps";
 		}
 		
 		public void BluetoothTrain(){
@@ -167,26 +165,38 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 			BT.init();
 			
 			//Each run 7 times
-			int numOfTest = 7;
+			int numOfTest = 2;
 			
+			isStartTrain = true;
+			hwName = "bluetooth_base";
 			
 			//1. Train base power, 0 bright, airplane
-			for(int i=0; i<=numOfTest; i++)
+			for(int i = 0; i < numOfTest; i++)
 			{
-				BT.testBase();
+				SystemClock.sleep(30000);
 				
-				 while(trainDuration > 0)
-	    		 {		
+				//BT.testBase();
+				Screen.SetBrightness(0);
+				
+				totalStep = 20;
+				
+				while(currentStep < totalStep )
+	    		{		
 	    			 SystemClock.sleep(1000);
-	    			 --trainDuration;
-	    		 }
+	    			 ++currentStep;
+	    		}
 	    		 
-	    		 trainDuration = 100;
-	    		 ++currentStep;
+				//isStartTrain=false;
+				//isBreak = true;
+				currentStep = 0;
+	    		Screen.SetBrightness(255);
 			}
 			
+			isBreak = true;
+			isMainBreak = true;
+			
 			//2. Train on -> non-discoverable mode
-			BT.testNonDiscovery();
+			//BT.testNonDiscovery();
 			
 			//3. Train on -> discoverable mode
 			//4. Train send file

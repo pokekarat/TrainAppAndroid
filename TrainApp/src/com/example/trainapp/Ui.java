@@ -1,6 +1,12 @@
 package com.example.trainapp;
 
+import android.content.Context;
+import android.location.LocationManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class Ui {
@@ -28,6 +34,17 @@ public class Ui {
     
     public Button button;
     
+    public CheckBox cpu_cb;
+    public CheckBox screen_cb;
+    public CheckBox gps_cb;
+    public CheckBox bt_cb;
+    
+	public String hwTarget = "";
+	LocationManager locMgr;
+	GPS locListener;
+	public LocationManager locateMgr;
+	public GPS gps;
+	
     public void Ui(){}
     
     public void init(){
@@ -52,6 +69,11 @@ public class Ui {
 		bluetoothTxt = (TextView)act.findViewById(R.id.bluetoothStatus);
 		
 		button = (Button)act.findViewById(R.id.button);
+		
+		cpu_cb = (CheckBox)act.findViewById(R.id.cpu_cb);
+		screen_cb = (CheckBox)act.findViewById(R.id.screen_cb);
+		gps_cb = (CheckBox)act.findViewById(R.id.gps_cb);
+		bt_cb = (CheckBox)act.findViewById(R.id.bluetooth_cb);
     }
     
 	public void showData(){
@@ -68,5 +90,62 @@ public class Ui {
     	battVoltTxt.setText("Battery volt =  "+ FileMgr.voltData);
     	battTempTxt.setText("Battery temp =  "+ FileMgr.tempData);
 	    	
+	}
+	
+public void setCB(){
+		
+		cpu_cb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v){
+				if(((CheckBox) v).isChecked()){
+					hwTarget = "cpu";
+					FileMgr.status = "Cpu is checked";
+				}
+			}
+		});
+		
+		screen_cb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v){
+				if(((CheckBox) v).isChecked()){
+					hwTarget = "screen";
+					FileMgr.status = "Screen is checked.";
+				}
+			}
+		});
+		
+		bt_cb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v){
+				if(((CheckBox) v).isChecked()){
+					hwTarget = "bluetooth";
+					FileMgr.status = "BT is checked.";
+				}
+			}
+		});
+		
+		gps_cb.setOnClickListener(new OnClickListener() 
+		{
+			
+			public void onClick(View v){
+				if(((CheckBox) v).isChecked()){
+					
+					locateMgr = (LocationManager)act.getSystemService(Context.LOCATION_SERVICE);
+					
+					gps = new GPS(locateMgr);
+										
+					locateMgr.addGpsStatusListener(gps);
+					
+					locateMgr.requestLocationUpdates( LocationManager.GPS_PROVIDER,
+			                     0,   // 3 sec
+			                     0.0f, // 10 meters 
+			                     gps);
+						
+					Log.i("GPS.java [startGPS]","is start");
+					hwTarget = "gps";
+					FileMgr.status = "GPS is checked.";
+				}
+			}
+		});
 	}
 }
