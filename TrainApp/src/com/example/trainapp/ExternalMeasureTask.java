@@ -19,29 +19,51 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 		hwTargetName = v.hwTarget;
 	}
 	
+	int runMode = -1;
 	@Override
 	protected void onPreExecute()
-	{    		 
-		FileMgr.status = "External measure working";
+	{    
 		Config.processing=true;
-	    view.button.setText("STOP");
+		
+		if(view.hwTarget == "")
+		{
+			runMode = 0;
+		}
+		else
+		{
+			runMode = 1;
+		}
+		
+		FileMgr.status = "External measure working";
+	    view.button.setText("Stop");
 	    Battery.INIT_BATT_LEVEL = Battery.getBatteryLevel();
 	    Config.sample = 0;
 	    ht = new HwTrainForExternal(this.setExternal, hwTargetName);
 	}
 	
+	int startTrainComTime = 100;
+	int delayMainSampleTime = 1000;
     @Override
 	protected Integer doInBackground(Integer... arg0)
 	{	
+    	   	
     	while(true)
     	{
-    		
-    		if(Config.sample == 30)
-    			ht.execute(Config.sample);
+    		//At least one com is checked
+    		if(runMode == 1)
+    		{
+	    		
+	    		if(Config.sample == startTrainComTime)
+	    		{
+	    				
+	    			ht.execute(Config.sample);
+	    		
+	    		}
+    		}
     		
     		this.publishProgress(Config.sample);
     		
-    		SystemClock.sleep(1000);
+    		SystemClock.sleep(delayMainSampleTime);
     		      		
     		++Config.sample;
     		
@@ -63,10 +85,10 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
 	protected void onProgressUpdate(Integer... arg1)
 	{    
 		
-		FileMgr.processResults();
+		FileMgr.updateResults();
 		
 		view.showData();
-	    		
+		
     	if(ht.hwName.contains("cpu"))
     	{
     		
@@ -128,7 +150,7 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
     		
     		if(ht.isStartTrain){
     			
-    			String s = "sample="+Config.sample + " step="+ht.currentStep+"/"+ht.totalStep + " cpu="+FileMgr.cpuUtil+" freq="+ FileMgr.cpuFreqData +" bright="+FileMgr.brightData + " voltage="+FileMgr.voltData + " temp="+FileMgr.tempData + " cap="+Battery.getBatteryLevel() + "\n";
+    			String s = "sample="+Config.sample + " step="+ht.currentStep+"/"+ht.totalStep + " cpu="+FileMgr.cpuUtilData+" freq="+ FileMgr.cpuFreqData +" bright="+FileMgr.brightData + " voltage="+FileMgr.voltData + " temp="+FileMgr.tempData + " cap="+Battery.getBatteryLevel() + "\n";
     			result += s;
     			view.bluetoothTxt.setText(s);
     			
@@ -146,11 +168,78 @@ class ExternalMeasureTask extends AsyncTask<Integer, Integer , Integer>
     		if(ht.isMainBreak)
 	    		this.isTrainStop = true;
     	}
+    	else if(ht.hwName.contains("wifi")){
+    		
+    		String s = "WiFi is train";
+    		
+    		if(ht.isStartTrain)
+    		{
+	
+    			s = "sample="+Config.sample + " step="+ht.currentStep+"/"+ht.totalStep + 
+    				" cpu="+FileMgr.cpuUtilData+" f="+ FileMgr.cpuFreqData +" b=" +
+    				FileMgr.brightData + " v="+FileMgr.voltData + " t="+FileMgr.tempData + " c="+Battery.getBatteryLevel() + 
+    				" ls="+ WiFi.wifiMgr.getConnectionInfo().getLinkSpeed() + " np="+(FileMgr.txPacket + FileMgr.rxPacket) + 
+    				" m=" + FileMgr.memUse + " cache=" + FileMgr.cacheUse + "\n";
+    			
+    			result += s;
+    			
+    			view.wifiTxt.setText(s);
+    			
+   			
+    		}
+    		else
+    		{
+    			view.statusTxt.setText("Processing...");
+    		}
+    		
+    		if(ht.isBreak){
+    			
+    			ht.isBreak = false;
+	    		ht.isStartTrain = false;
+	    		
+    			
+    			view.wifiTxt.setText("Finish testing...");
+    			FileMgr.saveSDCard(ht.hwName + "_" + WiFi.wifiMgr.getConnectionInfo().getLinkSpeed() , result);
+    			result = "";
+	    		
+    		}
+    		
+    		if(ht.isMainBreak)
+	    		this.isTrainStop = true;
+    		
+    	}
     	else if(ht.hwName.contains("")){
     		
-    		view.statusTxt.setText("No hw being trained");
-    	}
-	    	
+    		view.statusTxt.setText("Training base power");
+    		
+    		if(Config.sample >= this.startTrainComTime) 
+    		{
+    			if(Config.sample == this.startTrainComTime)
+    			{
+    				Screen.SetBrightness(0);
+    			}
+    			
+	    		result += " s=" + Config.sample + 
+							" u=" + FileMgr.cpuUtilData +
+							" f=" + FileMgr.cpuFreqData +
+							" b=" +	FileMgr.brightData +
+							" v=" + FileMgr.voltData + 
+							" t=" + FileMgr.tempData + 
+							" c=" + Battery.getBatteryLevel() +
+							" l=" + WiFi.wifiMgr.getConnectionInfo().getLinkSpeed() + 
+							" p=" + (FileMgr.txPacket + FileMgr.rxPacket) + 
+							" m=" + FileMgr.memUse +
+							" cache=" + FileMgr.cacheUse + 
+							"\n";
+    		}
+    		
+    		if(Config.sample == this.startTrainComTime+100)
+    		{
+    			FileMgr.saveSDCard("base", result);
+    			Screen.SetBrightness(255);
+    			this.isTrainStop = true;
+    		}
+    	}	
 	}
 	
 	

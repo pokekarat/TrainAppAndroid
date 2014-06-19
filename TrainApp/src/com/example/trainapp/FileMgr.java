@@ -46,7 +46,7 @@ public class FileMgr {
 	
 	
 	
-	public static double cpuUtil = 0;
+	private static double cpuUtil = 0;
 	public static String cpuUtilData = "";
 	public static double cpuFreqData = 0;
 	public static double brightData = 0;
@@ -54,8 +54,12 @@ public class FileMgr {
 	public static double voltData = 0;
 	public static double tempData = 0;
 	public static String status = "";
+	public static String memUse = "";
+	public static String cacheUse = "";
+	public static int txPacket = 0;
+	public static int rxPacket = 0;
 	
-	public static void processResults(){
+	public static void updateResults(){
 		
 		RandomAccessFile cpuUtilFile = null;
     	RandomAccessFile cpuFreqFile = null;
@@ -63,6 +67,7 @@ public class FileMgr {
     	RandomAccessFile governFile = null;
     	RandomAccessFile voltFile = null;
     	RandomAccessFile tempFile = null;
+    	
     	
     	try {
 		
@@ -73,11 +78,17 @@ public class FileMgr {
 			String gPath = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
 			String vPath = "/sys/class/power_supply/battery/voltage_now";
 			String tPath = "/sys/class/power_supply/battery/temp";
+			String mPath = "/proc/meminfo";
+			String txPath = "/sys/class/net/wlan0/statistics/tx_packets";
+			String rxPath = "/sys/class/net/wlan0/statistics/rx_packets";
 			
 			cpuUtilFile = new RandomAccessFile(cpuUtilPath, "r");
 			cpuUtilFile.readLine();
 			cpuUtil = CPU.parseCPU(cpuUtilFile.readLine());
 			cpuUtilData = String.format("%.2f",cpuUtil);
+			
+			memUse = CPU.parseMemUse(mPath);
+			cacheUse = CPU.parseCacheUse(mPath);
 								
 			cpuFreqFile = new RandomAccessFile(cpuFrePath, "r");
 			cpuFreqData = Double.parseDouble(cpuFreqFile.readLine())/1000;
@@ -93,6 +104,10 @@ public class FileMgr {
 			
 			tempFile = new RandomAccessFile(tPath, "r");
 			tempData = Double.parseDouble(tempFile.readLine())/10;
+			
+			txPacket = WiFi.TxPacket(txPath);
+			
+			rxPacket = WiFi.RxPacket(rxPath);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -121,5 +136,28 @@ public class FileMgr {
             } 
         } 
     	
+	}
+	
+	public static String readOneLine(String path){
+
+		String result = "";
+		
+		try 
+		{
+		
+			RandomAccessFile file = new RandomAccessFile(path, "r");		
+			result = file.readLine();
+			file.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return result;
 	}
 }

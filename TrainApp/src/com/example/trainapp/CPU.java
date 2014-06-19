@@ -318,4 +318,103 @@ public class CPU {
 		return diff_util; // String.valueOf(String.format("%.2f", diff_util));
 				
 	}	
+	
+	
+	public static String parseCacheUse(String path)
+	{
+		String result = "";
+		
+		try 
+		{
+		
+			RandomAccessFile memFile = new RandomAccessFile(path, "r");
+			
+			String line = "";
+			
+			while((line = memFile.readLine()) != null)
+			{
+				//result += line + "\n";			
+				if(line.contains("Cached"))
+				{
+					String[] data = line.split(" ");
+					for(int i=0; i<data.length; i++)
+					{
+						if(Util.isInteger(data[i])){
+							result = data[i];
+							break;
+						}
+					}
+					break;
+				}
+			}
+			 
+			memFile.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return result;
+		
+	}
+	
+	public static String parseMemUse(String path)
+	{
+		
+		String result = "";
+		
+		try 
+		{
+		
+			RandomAccessFile memFile = new RandomAccessFile(path, "r");
+			
+			String	totalStr = memFile.readLine();
+			String  freeStr = memFile.readLine();
+			
+			String[] x = totalStr.split(" ");
+			String[] y = freeStr.split(" ");
+			
+			double total = 0.0;
+			double free = 0.0;
+			
+			for(int i=0; i<x.length; i++)
+			{
+				if(Util.isInteger(x[i])){
+					total = Double.parseDouble(x[i]);
+					break;
+				}
+			}
+			
+			for(int j=0; j<y.length; j++)
+			{
+				if(Util.isInteger(y[j])){
+					free = Double.parseDouble(y[j]);
+					break;
+				}
+			}
+			
+			
+			double use = ((total - free )/ total ) * 100;
+			
+			result = String.valueOf(String.format("%.2f", use));
+						 
+			memFile.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return result;
+		
+	}
+	
+	
 }

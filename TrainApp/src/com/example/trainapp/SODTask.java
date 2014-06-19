@@ -54,7 +54,7 @@ class SODTask extends AsyncTask<Integer, Integer, Integer>
 	@Override
 	protected void onProgressUpdate(Integer... arg1)
 	{    		
-		    FileMgr.processResults();
+		    FileMgr.updateResults();
 		    
 		    int loop = arg1[0];
 	        
@@ -95,7 +95,7 @@ class SODTask extends AsyncTask<Integer, Integer, Integer>
 		    
 		    //if(loop != -1)
 		    //{	
-		    	result = loop + " voltage="+ FileMgr.voltData + " Util=" + FileMgr.cpuUtil + " Freq=" + FileMgr.cpuFreqData + " Battery=" + Battery.getBatteryLevel() + " Temp="+FileMgr.tempData+"\n";	
+		    	result = loop + " voltage="+ FileMgr.voltData + " Util=" + FileMgr.cpuUtilData + " Freq=" + FileMgr.cpuFreqData + " Battery=" + Battery.getBatteryLevel() + " Temp="+FileMgr.tempData+"\n";	
 		    	FileMgr.saveSDCard("SOD_"+ loop, result);
 		    //}
 		    

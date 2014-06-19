@@ -44,6 +44,11 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 		@Override
     	protected void onPreExecute()
     	{   
+			if(hwName == "wifi"){
+				
+				WiFi.createTestFile();
+				
+			}
     	}
 
 		public void CPUTrain()
@@ -203,6 +208,44 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 			//5. Train recv file
 		}
 		
+		public void wifiTrain(){
+		
+			int numOfTest = 7;
+			
+			WiFi.initToServer();
+			
+			for(int i=1; i<=numOfTest; i++){
+				
+				
+				Screen.SetBrightness(0);
+				
+				
+				Util.delay(10000);
+				
+				
+				isStartTrain = true;
+				
+				
+				hwName = "wifi"+i;
+				
+				
+				WiFi.sendFileToServer();
+				
+				
+				isBreak = true;
+				
+				
+				Screen.SetBrightness(255);
+				
+				
+				Util.delay(30000);
+			}
+			
+			WiFi.closeToServer();
+			
+			isMainBreak = true;
+		}
+		
 		@Override
 		protected Integer doInBackground(Integer... arg0) 
 		{			   
@@ -220,6 +263,9 @@ class HwTrainForExternal extends AsyncTask<Integer, String, Integer>
 			}
 			else if(hwName.equals("bluetooth")){
 				this.BluetoothTrain();
+			}
+			else if(hwName.equals("wifi")){
+				this.wifiTrain();
 			}
 			else {
 				

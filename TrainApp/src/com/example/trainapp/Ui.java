@@ -2,21 +2,25 @@ package com.example.trainapp;
 
 import android.content.Context;
 import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class Ui {
 
-	public MainActivity act;
 	public TextView cpuUtilTxt;
     public TextView cpuFreqTxt;
     public TextView battTxt;
     public TextView battVoltTxt;
     public TextView battTempTxt;
+    public TextView wifiSpeedTxt;
+    public TextView wifiStateTxt;
     
     public TextView governTxt;
     public TextView statusTxt;
@@ -26,6 +30,7 @@ public class Ui {
     public TextView cpuStatusTxt;
     public TextView screenStatusTxt;
     public TextView bluetoothTxt;
+    public TextView wifiTxt;
     
     public boolean isCpuChk = false;
     public boolean isScreenChk = false;
@@ -38,6 +43,7 @@ public class Ui {
     public CheckBox screen_cb;
     public CheckBox gps_cb;
     public CheckBox bt_cb;
+    public CheckBox wifi_cb;
     
 	public String hwTarget = "";
 	LocationManager locMgr;
@@ -45,9 +51,13 @@ public class Ui {
 	public LocationManager locateMgr;
 	public GPS gps;
 	
-    public void Ui(){}
+	public Spinner spinner1;
     
-    public void init(){
+	MainActivity _act;
+	
+    public void init(MainActivity act){
+    	
+    	_act = act;
     	
     	cpuUtilTxt = (TextView)act.findViewById(R.id.cpuUtil);
 		cpuFreqTxt = (TextView)act.findViewById(R.id.freq);
@@ -68,12 +78,20 @@ public class Ui {
 		gpsTxt = (TextView)act.findViewById(R.id.gpsStatus);
 		bluetoothTxt = (TextView)act.findViewById(R.id.bluetoothStatus);
 		
+		wifiTxt = (TextView)act.findViewById(R.id.wifiStatus);
+		//wifiSpeedTxt = (TextView)act.findViewById(R.id.wifiSpeedTxt);
+		wifiStateTxt = (TextView)act.findViewById(R.id.wifiStateTxt);
+		
+		
 		button = (Button)act.findViewById(R.id.button);
 		
 		cpu_cb = (CheckBox)act.findViewById(R.id.cpu_cb);
 		screen_cb = (CheckBox)act.findViewById(R.id.screen_cb);
 		gps_cb = (CheckBox)act.findViewById(R.id.gps_cb);
 		bt_cb = (CheckBox)act.findViewById(R.id.bluetooth_cb);
+		wifi_cb = (CheckBox)act.findViewById(R.id.wifi_cb);
+
+		spinner1 = (Spinner) act.findViewById(R.id.spinner1);
     }
     
 	public void showData(){
@@ -89,10 +107,17 @@ public class Ui {
     	battTxt.setText("Battery capacity =  "+ Battery.getBatteryLevel());
     	battVoltTxt.setText("Battery volt =  "+ FileMgr.voltData);
     	battTempTxt.setText("Battery temp =  "+ FileMgr.tempData);
+    	
+    	int speed = WiFi.wifiMgr.getConnectionInfo().getLinkSpeed();
+    	int strength = WifiManager.calculateSignalLevel(WiFi.wifiMgr.getConnectionInfo().getRssi(),5);
+		String units = WifiInfo.LINK_SPEED_UNITS;
+    	String ssid = WiFi.wifiMgr.getConnectionInfo().getSSID();
+    	//wifiSpeedTxt.setText("Wifi speed = " + );
+    	wifiStateTxt.setText(String.format("%s \nat %s%s. \nStrength %s/5", ssid,speed,units,strength));
 	    	
 	}
 	
-public void setCB(){
+	public void setCB(){
 		
 		cpu_cb.setOnClickListener(new OnClickListener() {
 			
@@ -130,7 +155,7 @@ public void setCB(){
 			public void onClick(View v){
 				if(((CheckBox) v).isChecked()){
 					
-					locateMgr = (LocationManager)act.getSystemService(Context.LOCATION_SERVICE);
+					locateMgr = (LocationManager)_act.getSystemService(Context.LOCATION_SERVICE);
 					
 					gps = new GPS(locateMgr);
 										
@@ -147,5 +172,17 @@ public void setCB(){
 				}
 			}
 		});
+		
+		wifi_cb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v){
+				if(((CheckBox) v).isChecked()){
+					hwTarget = "wifi";
+					FileMgr.status = "WiFi is checked.";
+				}
+			}
+		});
 	}
+	
+	
 }

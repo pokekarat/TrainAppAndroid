@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="84dp"
         android:layout_height="wrap_content"
         android:layout_x="217dp"
         android:layout_y="8dp"
@@ -114,47 +114,11 @@
         android:text="BT" />
 
     <TextView
-        android:id="@+id/bluetoothStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="122dp"
-        android:layout_y="276dp"
-        android:text="BT status"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/battCap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="14dp"
-        android:layout_y="392dp"
-        android:text="Battery capacity"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/freq"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="12dp"
-        android:layout_y="347dp"
-        android:text="CPU freq"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/cpuUtil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="12dp"
-        android:layout_y="325dp"
-        android:text="CPU util"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
         android:id="@+id/bright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="14dp"
-        android:layout_y="370dp"
+        android:layout_x="12dp"
+        android:layout_y="403dp"
         android:text="Bright"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -162,8 +126,8 @@
         android:id="@+id/battTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="14dp"
-        android:layout_y="431dp"
+        android:layout_x="12dp"
+        android:layout_y="483dp"
         android:text="Battery temperature"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -171,9 +135,70 @@
         android:id="@+id/battVolt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="14dp"
-        android:layout_y="409dp"
+        android:layout_x="12dp"
+        android:layout_y="461dp"
         android:text="Battery Volt"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <CheckBox
+        android:id="@+id/wifi_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="309dp"
+        android:text="WiFi" />
+
+    <TextView
+        android:id="@+id/bluetoothStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="120dp"
+        android:layout_y="276dp"
+        android:text="BT status"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/wifiStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="99dp"
+        android:layout_y="315dp"
+        android:text="WiFi status"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/wifiStateTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="168dp"
+        android:layout_y="374dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/cpuUtil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="7dp"
+        android:layout_y="360dp"
+        android:text="CPU util"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="8dp"
+        android:layout_y="383dp"
+        android:text="CPU freq"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/battCap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="12dp"
+        android:layout_y="426dp"
+        android:text="Battery capacity"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </AbsoluteLayout>
